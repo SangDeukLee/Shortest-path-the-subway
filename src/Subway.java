@@ -1,293 +1,267 @@
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.Scanner;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-
-class Fukuoka_Subway extends JFrame implements ActionListener {
-	
-	public int now_Time;
-	Dimension dimen, dimen1; // 화면에 값을 얻어오는 변수
-	int xpos, ypos;
-	
-	
-	String[] Airport_line = new String[6];			// 텐진 -> 후쿠오카 공항
-	int[] Airport_Subway = new int[5];				// 역 사이 걸리는 거리
-	
-	String[] Meinohama_line = new String[8];		// 텐진 -> 메이노하마
-	int[] Meinohama_Subway = new int[7];			// 역 사이 걸리는 거리
-	
-	//////////////////////////////////////////////////////////////
-	
-	String[] Hakozaki_line = new String[8];			// 텐진 -> 가이즈카
-	int[] Hakozaki_Subway = new int[7];				// 역 사이 걸리는 거리
-
-	String[] Nanakuma_line = new String[17];		// 텐진 -> 하시모토
-	int[] Nanakuma_Subway = new int[16];			// 역 사이 걸리는 거리
-	
-	JLabel title = new JLabel("Metro Station", JLabel.CENTER);
-	JLabel start = new JLabel("출발역", JLabel.CENTER);
-	JLabel end = new JLabel("도착역", JLabel.CENTER);
-	
-	JTextField startTextField = new JTextField();
-	JTextField endTextField = new JTextField();
-	JTextArea resultText = new JTextArea();
-	
-	JButton search = new JButton("検索");
-	
-	ImageIcon img = new ImageIcon("D:/Java/Project/src/Fukuoka.jpg");
-	JLabel ImgBox = new JLabel(img);
-	
-	/*프레임*/
-	public Fukuoka_Subway() {
-		super("Fukuoka Subway");
-		init(); // 라벨 삽입
-		close(); // 프레임 종료
-
-		setSize(1419, 800);
-		setResizable(false);
-
-		// 가운데 위치
-		dimen = Toolkit.getDefaultToolkit().getScreenSize();
-		dimen1 = getSize();
-
-		xpos = (int) (dimen.getWidth() / 2 - dimen1.getWidth() / 2);
-		ypos = (int) (dimen.getHeight() / 2 - dimen1.getHeight() / 2);
-
-		setLocation(xpos, ypos);
-		setVisible(true);
-	}
-	
-	/*붙이는 부분*/
-	public void init() {
-
-		ImgBox.setBounds(0, 0, img.getIconWidth(), img.getIconHeight()); // 이미지
-
-		start.setBounds(20, 700, 85, 50); // 출발역 라벨
-		start.setVerticalTextPosition(JLabel.CENTER);
-
-		startTextField.setBounds(130, 710, 120, 30); // 출발역 입력
+public class Subway {
+	public static void main(String [] args) {
+        Scanner scan1 = new Scanner(System.in);      // 문자 입력을 인자로 Scanner 생성
+		System.out.println("출발역 : ");
+		String start = scan1.nextLine();
 		
-		////////////////
+		Scanner scan2 = new Scanner(System.in);
+		System.out.println("도착역 : ");
+		String end	= scan2.nextLine();
 		
-		end.setBounds(350, 700, 85, 50); // 도착역 라벨
-		end.setVerticalTextPosition(JLabel.CENTER);
-
-		endTextField.setBounds(460, 710, 120, 30); // 도착역 입력
+		Search di = new Search();	//최단노선 검색 객체 생성
+		di.s_count=0;				//거처간 정거장 수 초기화
 		
-		//////////////////
-		
-		search.setBounds(700, 710, 100, 30); // 검색 버튼
-
-		resultText.setBounds(850, 30, 540, 600); // 결과 텍스트 출력
-
-		// 화면 구성 넣을 부분
-		
-		setLayout(null);
-		add(ImgBox);
-		// 이미지
-
-		add(start);
-		add(end);
-		add(resultText);
-		add(startTextField);
-		startTextField.setHorizontalAlignment(JTextField.CENTER);
-		add(endTextField);
-		endTextField.setHorizontalAlignment(JTextField.CENTER);
-
-		add(search);
-		search.addActionListener(this);
-
-	}
-
-	// 종료 메소드
-	public void close() {
-
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}
-
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		if (e.getSource() == search) {
-
-			/* 시간 함수 */
-			SimpleDateFormat simpleDateFormat = null;
-			String format = "a h:mm ";
-			simpleDateFormat = new SimpleDateFormat(format, Locale.KOREA);
-			String date = simpleDateFormat.format(new java.util.Date());
-	
-
-			/* 텍스트 필드 값 읽어오기 */
-			String x = new String(startTextField.getText());
-			String y = new String(endTextField.getText());
-		
-			Airport_line[0] = "天神";
-			Airport_line[1] = "中洲川端";
-			Airport_line[2] = "祇園";
-			Airport_line[3] = "博多";
-			Airport_line[4] = "東比恵";
-			Airport_line[5] = "福岡空港";
-			
-			Meinohama_line[0] = "天神";
-			Meinohama_line[1] = "赤坂";
-			Meinohama_line[2] = "大濠公園";
-			Meinohama_line[3] = "唐人町";
-			Meinohama_line[4] = "西新";
-			Meinohama_line[5] = "藤崎";
-			Meinohama_line[6] = "室見";
-			Meinohama_line[7] = "姪浜";
-			
-			Hakozaki_line[0] = "天神";
-			Hakozaki_line[1] = "中洲川端";
-			Hakozaki_line[2] = "江北町";
-			Hakozaki_line[3] = "千代県庁口";
-			Hakozaki_line[4] = "馬出九大病院前";
-			Hakozaki_line[5] = "箱崎宮前";
-			Hakozaki_line[6] = "箱崎九大前";
-			Hakozaki_line[7] = "貝塚";
-
-			Nanakuma_line[0] = "天神";
-			Nanakuma_line[1] = "天神南";
-			Nanakuma_line[2] = "渡辺通";
-			Nanakuma_line[3] = "薬院";
-			Nanakuma_line[4] = "薬院大通";
-			Nanakuma_line[5] = "桜坂";
-			Nanakuma_line[6] = "六本松";
-			Nanakuma_line[7] = "別府";
-			Nanakuma_line[8] = "茶山";
-			Nanakuma_line[9] = "金山";
-			Nanakuma_line[10] = "七隈";
-			Nanakuma_line[11] = "福大前";
-			Nanakuma_line[12] = "梅林";
-			Nanakuma_line[13] = "野芥";
-			Nanakuma_line[14] = "賀茂";
-			Nanakuma_line[15] = "次郎丸";
-			Nanakuma_line[16] = "橋本";
-
-			
-			Airport_Subway[0] = 2;		 
-			Airport_Subway[1] = 2;		
-			Airport_Subway[2] = 2;		
-			Airport_Subway[3] = 2;		
-			Airport_Subway[4] = 2;	
-			
-			Meinohama_Subway[0] = 2;		 
-			Meinohama_Subway[1] = 2;		
-			Meinohama_Subway[2] = 2;		
-			Meinohama_Subway[3] = 2;		
-			Meinohama_Subway[4]	= 2;		
-			Meinohama_Subway[5]	= 2;		
-			Meinohama_Subway[6]	= 1;		
-			Meinohama_Subway[7]	= 3;		
-
-			Hakozaki_Subway[0]	= 2;	// 나카스카와바타		
-			Hakozaki_Subway[1]	= 1;	// 고후쿠마치	
-			Hakozaki_Subway[2]	= 2;		
-			Hakozaki_Subway[3]	= 1;		
-			Hakozaki_Subway[4]	= 2;		
-			Hakozaki_Subway[5]	= 2;		
-			Hakozaki_Subway[6]	= 2;		
-
-			Nanakuma_Subway[0]	= 0;	//텐진미나미		
-			Nanakuma_Subway[1]	= 1;		
-			Nanakuma_Subway[2]	= 2;		
-			Nanakuma_Subway[3]	= 1;		
-			Nanakuma_Subway[4]	= 2;		
-			Nanakuma_Subway[5]	= 2;		
-			Nanakuma_Subway[6]	= 1;		
-			Nanakuma_Subway[7]	= 2;		
-			Nanakuma_Subway[8]	= 2;		
-			Nanakuma_Subway[9]	= 1;		
-			Nanakuma_Subway[10]	= 2;		
-			Nanakuma_Subway[11]	= 1;		
-			Nanakuma_Subway[12]	= 2;		
-			Nanakuma_Subway[13]	= 2;		
-			Nanakuma_Subway[14]	= 1;		
-			Nanakuma_Subway[15]	= 2;
-			
-			int 	sum_subway_first  	= 0;
-			int 	sum_subway_second 	= 0;
-			String	sum_course_first	= "";
-			String	sum_course_second 	= "";
-			
-			if (x.equals("天神")) {// 검색
-				sum_subway_first = 0;
-				sum_course_first = "";
-				
-				for (int i1 = 0; i1 < Airport_line.length; i1++) {
-					if (y.equals(Airport_line[i1])) {
-						for (int k = 0; k < i1; k++) {
-							sum_subway_second += Airport_Subway[k];
-							sum_course_second += Airport_line[k];
-						}
-					}
-				}
-				for (int i1 = 0; i1 < Meinohama_line.length; i1++) {
-					if (y.equals(Meinohama_line[i1])) {
-						for (int k = 0; k < i1; k++) {
-							sum_subway_second += Meinohama_Subway[k];
-							sum_course_second += Meinohama_line[k];
-						}
-					}
-				}
-				for (int i1 = 0; i1 < Hakozaki_line.length; i1++) {
-					if (y.equals(Hakozaki_line[i1])) {
-						for (int k = 0; k < i1; k++) {
-							sum_subway_second += Hakozaki_Subway[k];
-							sum_course_second += Hakozaki_line[k];
-						}
-					}
-				}
-				for (int i1 = 0; i1 < Nanakuma_line.length; i1++) {
-					if (y.equals(Nanakuma_line[i1])) {
-						for (int k = 0; k < i1; k++) {
-							sum_subway_second += Nanakuma_Subway[k];
-							sum_course_second += Nanakuma_line[k];
-						}
-					}
-				}
+		int time = di.Dijkstra(di.searchStation(start), di.searchStation(end));//다익스트라 알고리즘으로 역 탐색
+		int i,j=0;
+		if(time==0 || time==30000) {
+			System.out.println("\n\n\n      잘못입력하였습니다!!\n\n      역을 제대로 입력하십시오.");
+		}
+		else {
+			System.out.println("\n    <최소시간>\n\n");
+			System.out.println("  소요시간 :  약 " +  time + "분\n\n");
+			System.out.println("  정거장수 : " +   di.s_count     + "\n\n");
+			System.out.println("  경        로  \n\n"); 
+			for(i=0; di.V[i].dist < 30000; i++){
+				System.out.println(" " + di.V[i].sName + " ->");
+				j = i%3;
+				if(j == 2) System.out.println("\n");
 			}
-			else {
-				sum_subway_second = 0;
-			}
-			
-			// 예외발생
-			if (x.equals("")) {
-				JOptionPane.showMessageDialog(this, "출발역을 입력하세요");
-			} 
-			
-			else if (y.equals("")) {
-				JOptionPane.showMessageDialog(this, "도착역을 입력하세요");
-			} 
-			
-			else {
-				resultText.setText("지하철 이용 시간 : "
-										+ Math.abs(sum_subway_first + sum_subway_second) / 60
-										+ "시간 " + Math.abs(sum_subway_first + sum_subway_second)
-										% 60 + "분\n" + "현재시각\n" + date.toString()
-									
-									);
-			}
-			
-			
+			System.out.println("  " + di.V[i].sName);
+	
 		}
 	}
 }
-public class Subway {
-	public static void main(String [] args) {		
-		Fukuoka_Subway frame = new Fukuoka_Subway();		
+class SubType {
+	String sName = new String();
+	int dist;
+	int pNode;
+	boolean visited;
+	int next;
+	NodeType link;
+}
+
+class NodeType {
+	int nodeNum;
+	int dis;
+	NodeType next;
+}
+
+class Search
+{
+	public static final int MAX_STATIONS	= 400; // 서울시 지하철 노선의 역 수는 약 400개
+	public static int stationCount = 1;// 역 수
+	public static SubType[] S = new SubType[MAX_STATIONS];	// 지하철 인접 리스트
+	public static SubType[] V = new SubType[MAX_STATIONS];	// 결과를 저장
+	public static int s_count=0;//거처간 정거장 수
+
+	public Search() {
+			for(int i=0; i < MAX_STATIONS; i++) {
+				S[i] = new SubType();
+				V[i] = new SubType();
+
+			}
+
+			insert("대곡","진천",2);
+			insert("진천","월배",2);
+			insert("월배","상인",1);
+			insert("상인","월촌",2);
+			insert("월촌","송현",2);
+			insert("송현","성당못",2);
+			insert("성당못","대명",1);
+			insert("대명","안지랑",2);
+			insert("안지랑","현충로",2);
+			insert("현충로","영대병원",1);
+			insert("영대병원","교대",2);
+			insert("교대","명덕",2);
+			insert("명덕","반월당",1);
+			
+			insert("반월당","중앙로",2);
+			insert("중앙로","대구역",1);
+			insert("대구역","칠성시장",2);
+			insert("칠성시장","신천",2);
+			insert("신천","동대구역",2);
+			insert("동대구역","큰고개",1);
+			insert("큰고개","아양교",2);
+			insert("아양교","동촌",2);
+			insert("동촌","해안",2);
+			insert("해안","방촌",2);
+			insert("방촌","용계",2);
+			insert("용계","율하",2);
+			insert("율하","신기",2);
+			insert("신기","반야월",1);
+			insert("반야월","각산",2);
+			insert("각산","안심",2);
+			
+			insert("문양","다사",2);
+			insert("다사","대실",2);
+			insert("대실","강창",2);
+			insert("강창","계명대",2);
+			insert("계명대","성서산단",2);
+			insert("성서산단","이곡",2);
+			insert("이곡","용산",2);
+			insert("용산","죽전",2);
+			insert("죽전","감삼",2);
+			insert("감삼","두류",2);
+			insert("두류","내당",2);
+			insert("내당","반고개",2);
+			insert("반고개","신남",2);
+			insert("신남","반월당",2);
+			
+			insert("반월당","경대병원",2);
+			insert("경대병원","대구은행",2);
+			insert("대구은행","범어",2);
+			insert("범어","수성구청",2);
+			insert("수성구청","만촌",2);
+			insert("만촌","담티",2);
+			insert("담티","연호",2);
+			insert("연호","대공원",2);
+			insert("대공원","고산",2);
+			insert("고산","신매",2);
+			insert("신매","사월",2);
+			insert("사월","정평",2);
+			insert("정평","영남대",2);
+			
+	}
+	
+	static void insert(String name1, String name2, int time) {	//노선을 구성하기 위한 함수 역1, 역2, 걸리는 시간
+		int Index1, Index2;
+		Index1 = searchStation(name1);
+		Index2 = searchStation(name2);
+
+		// 두 역에 Edge를 추가.
+		insertNode(Index1, Index2, time);
+		insertNode(Index2, Index1, time);	
+		
+		
+	}
+	
+	// 역 이름을 갖고 역 번호를 찾는 함수.
+	// 해당 역이 S[] 에 존재하지 않으면 마지막에 추가하고 그 번호를 반환.
+	static int searchStation(String stationName) {
+		int i=1;
+		for (i = 1; i < stationCount; i++) { 
+			if(S[i].sName.equals(stationName)){    //있으면
+				return i;
+			}		
+		}
+		// 없으면		
+		S[i].sName = stationName;
+		S[i].link = null;
+		S[i].visited = false;
+		stationCount++;
+		
+		return i;
+	}
+
+	// SubNode 에 Node 를 삽입하는 함수.
+	// 삽입되는 노드의 가중치는 시간 dis(분)
+	static void insertNode(int subNodeNum, int nodeNum, int dis) {
+		// 메모리에 NodeType 구조체를 생성하고 그 주소를 newNode 에 치환
+		NodeType newNode = new NodeType();			// 새로 추가될 노드의 값을 입력
+		newNode.nodeNum = nodeNum;
+		newNode.dis = dis;		// 노드를 맨 앞에 삽입
+		newNode.next = S[subNodeNum].link;
+		S[subNodeNum].link = newNode;
+		
+	}
+
+	
+
+	static int Dijkstra(int startNodeNum, int endNodeNum) {		
+	
+		// 경로를 출력하기 위해 트리를 역탐색 하게 되므로 처음부터 endNode 를 기준으로 최단 경로 트리를 구성한다.
+
+		// 최단거리 트리를 구성하기 위해 pNode와 dist, next 값을 초기화
+		int i;
+		for (i = 0; i < stationCount; i++) {
+			S[i].pNode = 0;
+			S[i].dist = 30000;	// 무한대
+			S[i].next = 0;
+		}
+
+		// 종착 노드의 최단거리는 0
+		S[endNodeNum].dist = 0;		//경로를 출력하기 위해서 끝노드 부터
+		// 최단거리가 예상되는 그룹 V2 의 링크드 리스트 초기값 (종착 노드)
+		int V2 = endNodeNum;
+		
+		// V2 그룹이 사라질때까지
+		while (V2 > 0) {
+			// V2 에서 dist 가 최소인 노드를 찾는다.
+			//초기화
+			int prevNodeNum = 0;
+			int nodeNum = V2;
+			int minPrevNodeNum = 0;
+			int minNodeNum = V2;
+			int minDist = 30000;
+			
+
+			while (nodeNum > 0) {		//노드넘버가 있으면 
+				if (S[nodeNum].dist < minDist) {	//현재 노드의 거리가 저장된 최소거리값보다 작을때
+					minDist = S[nodeNum].dist;
+					minNodeNum = nodeNum;
+					minPrevNodeNum = prevNodeNum;
+				}
+				prevNodeNum = nodeNum;		//다음 노드로
+				nodeNum = S[nodeNum].next;
+				
+			}
+
+	   
+			// 인접 노드들중 V2 에 속하지 않은 것은 추가하고
+			// Dist 값들을 갱신해준다.
+			NodeType newNode = S[minNodeNum].link;
+
+			while (newNode != null) {			
+				if (S[newNode.nodeNum].dist == 30000) {		// 인접 노드의 Dist 가 무한대라면(V2 에 속하지 않았다면)
+					// V2 에 추가
+					S[newNode.nodeNum].next = V2;
+					V2 = newNode.nodeNum;
+				}
+
+				// Min 노드의 Dist 와 인접 노드의 dis 합이 인접 노드의 Dist 보다 작다면 치환.
+				// 즉, Min 노드를 통해 인접 노드에 도달하는 거리가 더 가깝다면.
+				if (S[newNode.nodeNum].dist > S[minNodeNum].dist + newNode.dis) {
+					S[newNode.nodeNum].dist = S[minNodeNum].dist + newNode.dis;
+					// 부모 노드를 Min 노드로 설정
+					S[newNode.nodeNum].pNode = minNodeNum;
+				}
+				newNode = newNode.next;
+			}
+			
+			// Min 노드를 V2 그룹에서 제거
+			// 단, 첫번째 노드라면 특별히 제거
+			if (V2 == minNodeNum) {
+				V2 = S[minNodeNum].next;			
+			}	else {			
+				S[minPrevNodeNum].next = S[minNodeNum].next;
+			}		
+		}
+		
+		// StartNode 로 부터 EndNode 로 역탐색
+		int nodeNum = startNodeNum;
+		int j=0;
+		// 거리가 무한대라면 탐색하지 않음
+		if (S[startNodeNum].dist == 30000) {
+			System.out.print( S[startNodeNum].sName + "에서 " + S[endNodeNum].sName + "까지의 경로는 존재하지 않음" );
+		} 
+		else {
+			// 역탐색하여 경로 출력
+			while (nodeNum != endNodeNum) {
+				System.out.print( S[nodeNum].sName + " -> ");
+				V[j].sName	= 	S[nodeNum].sName;
+				nodeNum = S[nodeNum].pNode;
+				
+				s_count++;
+				j++;
+			}
+			// System.out.println( S[nodeNum].sName );
+			V[j].sName	= 	S[nodeNum].sName;
+			V[j].dist	= 	30000;
+			System.out.print( "걸리는 시간: " + (S[startNodeNum].dist ) + "분 " );
+		}
+		stationCount = 1;// 역 수 초기화
+		return S[startNodeNum].dist;
 	}
 }
