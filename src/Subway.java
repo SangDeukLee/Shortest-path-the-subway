@@ -1,5 +1,5 @@
 import java.util.Scanner;
-
+// 내일은 레이아웃과 다른 호선
 public class Subway {
 	public static void main(String [] args) {
         Scanner scan1 = new Scanner(System.in);      // 문자 입력을 인자로 Scanner 생성
