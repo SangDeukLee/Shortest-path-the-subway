@@ -25,8 +25,8 @@ public class Schedule extends JFrame {
 	JLabel nowDate;
 
 	public Schedule() {
-		JButton beforeM = new JButton("<<이전");
-		JButton nextM = new JButton("다음>>");
+		JButton beforeM = new JButton("이전");
+		JButton nextM = new JButton("다음");
 		nowDate = new JLabel("현재시각",JLabel.CENTER);
 		
 		//시간을 1초마다 최신화 하기 위한 스레드 클래스
@@ -70,11 +70,20 @@ public class Schedule extends JFrame {
 		beforeM.addActionListener(bm);
 		
 		tm1 = new CModel();
-		
+		/*
+		 * 테이블의 모양(모델)을 형성하는 클래스는
+		 * TableModel, AbstractTableModel. DefaultTableModel이 있음
+		 * AbstactTableModel
+		 * - TableModel를 구현한 클래스 
+		 * - 직접 모델을 정의해서 사용하려면 이 클래스를 상속받아 사용
+		 * 
+		 * JTable(TableModel dm)
+		 * - 데이터 모델 dm으로 초기화 되는 JTable 생성
+		 */
 		tb = new JTable(tm1);
+		
 		JScrollPane jsp = new JScrollPane(tb);
 		pane.add(jsp, BorderLayout.CENTER);
-	//	pane.add(tb,BorderLayout.CENTER);
 		tb.addMouseListener(new Click());
 		
 		tm1.fireTableDataChanged();
@@ -84,18 +93,11 @@ public class Schedule extends JFrame {
 		Schedule tjt = new Schedule();
 
 		tjt.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		tjt.setTitle("스케쥴 관리");
+		tjt.setTitle("Schedule Calender");
 		tjt.setSize(500, 180);
 		tjt.setVisible(true);
-	//	nowMonth.setText(String.valueOf(CalendarModel.thismonthresult));
-		Rendring tr = new Rendring();
+
 		
-		try {
-			tb.setDefaultRenderer(Class.forName("java.lang.Object"), tr);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 	}
 }
