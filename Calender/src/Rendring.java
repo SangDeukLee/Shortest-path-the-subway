@@ -26,7 +26,7 @@ class Rendring extends DefaultTableCellRenderer {
 			
 	
 			// 오늘 날짜에 해당하는 셀을 오렌지색으로 처리
-			if (tm1.getDate(row, column) == dt.getDate()) {
+			if (tm1.getDate(row, column) == dt.getDate() && tm1.getDate() == ss) {
 				if(row == 0 && dt.getDate() > 20){
 				//첫번째 줄의 날짜가 20이상일 경우 색칠하지 않는다.	
 				}
