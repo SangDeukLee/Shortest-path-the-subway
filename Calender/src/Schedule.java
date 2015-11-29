@@ -86,7 +86,7 @@ public class Schedule extends JFrame {
 		pane.add(jsp, BorderLayout.CENTER);
 		tb.addMouseListener(new Click());
 		
-		tm1.fireTableDataChanged();
+		//tm1.fireTableDataChanged();
 	}
 
 	public static void main(String[] args) {
@@ -97,7 +97,15 @@ public class Schedule extends JFrame {
 		tjt.setSize(500, 180);
 		tjt.setVisible(true);
 
+		Rendring tr = new Rendring();
 		
+		try {
+
+			tb.setDefaultRenderer(Class.forName("java.lang.Object"), tr);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 }
