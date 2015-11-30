@@ -55,7 +55,6 @@ public class Schedule extends JFrame {
 		
 		pane.setLayout(new BorderLayout());
 		
-		
 		//시간은 스레드를 통해 1초당 한번씩 갱신해줘야 합니다.
 		
 		panel.add(nowMonth);
@@ -81,12 +80,12 @@ public class Schedule extends JFrame {
 		 * - 데이터 모델 dm으로 초기화 되는 JTable 생성
 		 */
 		tb = new JTable(tm1);
-		
+
 		JScrollPane jsp = new JScrollPane(tb);
 		pane.add(jsp, BorderLayout.CENTER);
 		tb.addMouseListener(new Click());
+		//tm1.fireTableDataChanged();
 		
-		tm1.fireTableDataChanged();
 	}
 
 	public static void main(String[] args) {
@@ -97,7 +96,15 @@ public class Schedule extends JFrame {
 		tjt.setSize(500, 180);
 		tjt.setVisible(true);
 
+		Rendring tr = new Rendring();
 		
+		try {
+
+			tb.setDefaultRenderer(Class.forName("java.lang.Object"), tr);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 }
@@ -121,7 +128,6 @@ class beforeMonthListener implements ActionListener {
 		// TODO Auto-generated method stub
 		System.out.println("이전달로 이동");
 		CModel.monthplus = CModel.monthplus - 1;
-		
 		Schedule.tm1.fireTableDataChanged();
 	}
 }
